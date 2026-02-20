@@ -1,21 +1,21 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const connectDB = require("./src/config/db");
+const connectDB = require("./config/db");
 
 dotenv.config();
 connectDB();
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Change these lines:
-app.use("/api/auth", require("./src/routes/authRoutes"));
-app.use("/api/news", require("./src/routes/newsRoutes")); // Note: check if this is "newsRoutea" or "newsRoutes" in your files
-app.use("/api/users", require("./src/routes/userRoutes"));
-app.use("/api/contact", require("./src/routes/contactRoutes"));
+app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/news", require("./routes/newsRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/contact", require("./routes/contactRoutes"));
 
 app.get("/", (req, res) => {
   res.json({ message: "News Portal API is running..." });
