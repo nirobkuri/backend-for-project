@@ -35,8 +35,7 @@ const getLatestNews = asyncHandler(async (req, res) => {
 
 const getSingleNews = asyncHandler(async (req, res) => {
   const news = await News.findById(req.params.id).populate(
-    "author",
-    "name avatar bio"
+    "author", "name avatar bio"
   );
   if (!news) {
     res.status(404);
@@ -44,7 +43,6 @@ const getSingleNews = asyncHandler(async (req, res) => {
   }
   news.views += 1;
   await news.save();
-
   const related = await News.find({
     _id: { $ne: news._id },
     category: news.category,
@@ -52,7 +50,6 @@ const getSingleNews = asyncHandler(async (req, res) => {
   })
     .populate("author", "name")
     .limit(4);
-
   res.json({ news, related });
 });
 
@@ -63,10 +60,7 @@ const createNews = asyncHandler(async (req, res) => {
     throw new Error("Please fill all required fields");
   }
   const news = await News.create({
-    title,
-    content,
-    summary,
-    category,
+    title, content, summary, category,
     tags: tags ? tags.split(",").map((t) => t.trim()) : [],
     image: req.file ? req.file.path : "",
     author: req.user._id,
@@ -91,8 +85,7 @@ const updateNews = asyncHandler(async (req, res) => {
   news.content = content || news.content;
   news.summary = summary || news.summary;
   news.category = category || news.category;
-  news.isPublished =
-    isPublished !== undefined ? isPublished : news.isPublished;
+  news.isPublished = isPublished !== undefined ? isPublished : news.isPublished;
   news.tags = tags ? tags.split(",").map((t) => t.trim()) : news.tags;
   if (req.file) news.image = req.file.path;
   const updated = await news.save();
